@@ -1,0 +1,21 @@
+api_tester is a simple script for testing APIs built against api_producer.
+This script does not do any type of setup. It assumes systems (db, web server,
+etc) are already up and running. The main purpose is basically unit tests for
+the API as a whole.
+
+See sample_tests.pl for a an incomplete example.
+
+Usage:
+
+$ ./api_tester.pl -c ~/github/kimor79/nodegroups-api/api_tester/v2_w_create_nodegroup.pl
+# Unique string is api_tester.pl44911336789725
+ok 1 - create_nodegroup.php: requests != responses
+ok 2 - create_nodegroup.php: request -> JSON
+not ok 3 - create_nodegroup.php: HTTP 2xx
+#   Failed test 'create_nodegroup.php: HTTP 2xx'
+#   at ./bin/api_tester.pl line 153.
+# 500 Internal Server Error
+1..5
+# Looks like you planned 5 tests but ran 3.
+# Looks like you failed 1 test of 3 run.
+# Looks like your test exited with 1 just after 3.
