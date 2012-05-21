@@ -119,8 +119,8 @@ USAGE
 init();
 
 foreach my $test (@{$TESTS}) {
-	my $requests = scalar(@{$test->{'request'}});
-	my $responses = scalar(@{$test->{'response'}});
+	my $requests = scalar(@{$test->{'requests'}});
+	my $responses = scalar(@{$test->{'responses'}});
 
 	$TOTAL += $requests * 5;
 
@@ -128,9 +128,9 @@ foreach my $test (@{$TESTS}) {
 		$test->{'description'} . ': requests != responses'));
 
 	my $cur = 0;
-	foreach my $request (@{$test->{'request'}}) {
+	foreach my $request (@{$test->{'requests'}}) {
 		my $err;
-		my $expected = $test->{'response'}->[$cur];
+		my $expected = $test->{'responses'}->[$cur];
 		my $got;
 		my $json;
 		my $req = HTTP::Request->new('POST' => $test->{'uri'});
