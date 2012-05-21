@@ -176,4 +176,4 @@ foreach my $test (@{$TESTS}) {
 	}
 }
 
-exit(done_testing($TOTAL));
+done_testing($TOTAL);
