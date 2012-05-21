@@ -130,7 +130,7 @@ foreach my $test (@{$TESTS}) {
 	my $cur = 0;
 	foreach my $request (@{$test->{'request'}}) {
 		my $err;
-		my $expected = $test->{'request'}->[$cur];
+		my $expected = $test->{'response'}->[$cur];
 		my $got;
 		my $json;
 		my $req = HTTP::Request->new('POST' => $test->{'uri'});
@@ -167,6 +167,7 @@ foreach my $test (@{$TESTS}) {
 
 		unless(cmp_deeply($got, $expected->{'body'},
 				$test->{'description'} . ': body')) {
+			diag(explain($got));
 			$cur++;
 			next;
 		}
