@@ -135,8 +135,14 @@ TEST: foreach my $test (@{$TESTS}) {
 		my $expected = $test->{'responses'}->[$cur];
 		my $got;
 		my $json;
-		my $req = HTTP::Request->new('POST' => $test->{'uri'});
+		my $req;
 		my $response;
+
+		if(defined($request->{'uri'})) {
+			$req = HTTP::Request->new('POST' => $request->{'uri'});
+		} else {
+			$req = HTTP::Request->new('POST' => $test->{'uri'});
+		}
 
 		if($request->{'json'}) {
 			($json, $err)  = $JSON->to_json($request->{'json'});
