@@ -122,10 +122,12 @@ TEST: foreach my $test (@{$TESTS}) {
 	my $requests = scalar(@{$test->{'requests'}});
 	my $responses = scalar(@{$test->{'responses'}});
 
-	$TOTAL += $requests * 5;
+	$TOTAL++;
 
 	next unless(is($requests, $responses,
 		$test->{'description'} . ': requests != responses'));
+
+	$TOTAL += $requests * 4;
 
 	my $cur = 0;
 	foreach my $request (@{$test->{'requests'}}) {
