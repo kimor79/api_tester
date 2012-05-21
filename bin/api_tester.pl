@@ -118,7 +118,7 @@ USAGE
 
 init();
 
-foreach my $test (@{$TESTS}) {
+TEST: foreach my $test (@{$TESTS}) {
 	my $requests = scalar(@{$test->{'requests'}});
 	my $responses = scalar(@{$test->{'responses'}});
 
@@ -142,7 +142,7 @@ foreach my $test (@{$TESTS}) {
 					': request -> JSON')) {
 				diag($err);
 				$cur++;
-				next;
+				next TEST;
 			}
 
 			$req->header('Content-Type' => 'application/json');
@@ -154,7 +154,7 @@ foreach my $test (@{$TESTS}) {
 				': HTTP 2xx')) {
 			diag($response->status_line());
 			$cur++;
-			next;
+			next TEST;
 		}
 
 		($got, $err) = $JSON->from_json($response->decoded_content());
@@ -162,14 +162,14 @@ foreach my $test (@{$TESTS}) {
 				': JSON response -> perl')) {
 			diag($err);
 			$cur++;
-			next;
+			next TEST;
 		}
 
 		unless(cmp_deeply($got, $expected->{'body'},
 				$test->{'description'} . ': body')) {
 			diag(explain($got));
 			$cur++;
-			next;
+			next TEST;
 		}
 
 		$cur++;
