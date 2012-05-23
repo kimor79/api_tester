@@ -18,6 +18,7 @@ use JSON::DWIW;
 use LWP::UserAgent;
 use Test::Deep;
 use Test::More;
+use URI::Escape;
 
 ##
 ## Variables
@@ -137,11 +138,21 @@ TEST: foreach my $test (@{$TESTS}) {
 		my $json;
 		my $req;
 		my $response;
+		my $uri = $test->{'uri'};
 
 		if(defined($request->{'uri'})) {
-			$req = HTTP::Request->new('POST' => $request->{'uri'});
-		} else {
-			$req = HTTP::Request->new('POST' => $test->{'uri'});
+			$uri = $request->{'uri'};
+		}
+
+		$uri .= '?outputFormat=json';
+
+		if($request->{'get'}) {
+			my @g_params = ();
+			while(my($key, $val) = each(%{$request->{'get'}})) {
+				push(@g_params, $key . '=' . uri_escape($val));
+			}
+
+			$uri .= '&' . join('&', @g_params);
 		}
 
 		if($request->{'json'}) {
@@ -153,9 +164,11 @@ TEST: foreach my $test (@{$TESTS}) {
 				next TEST;
 			}
 
+			$req = HTTP::Request->new('POST' => $uri);
 			$req->header('Content-Type' => 'application/json');
 			$req->content($json);
 		} else {
+			$req = HTTP::Request->new('GET' => $uri);
 			$TOTAL--;
 		}
 
