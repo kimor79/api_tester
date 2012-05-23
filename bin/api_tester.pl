@@ -169,6 +169,7 @@ TEST: foreach my $test (@{$TESTS}) {
 		unless(ok(!defined($err), $test->{'description'} .
 				': JSON response -> perl')) {
 			diag($err);
+			diag($response->decoded_content());
 			$cur++;
 			next TEST;
 		}
