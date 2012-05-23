@@ -155,6 +155,8 @@ TEST: foreach my $test (@{$TESTS}) {
 
 			$req->header('Content-Type' => 'application/json');
 			$req->content($json);
+		} else {
+			$TOTAL--;
 		}
 
 		$response = $UA->request($req);
