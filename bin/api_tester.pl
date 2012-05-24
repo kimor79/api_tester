@@ -149,7 +149,15 @@ TEST: foreach my $test (@{$TESTS}) {
 		if($request->{'get'}) {
 			my @g_params = ();
 			while(my($key, $val) = each(%{$request->{'get'}})) {
-				push(@g_params, $key . '=' . uri_escape($val));
+				if(ref($val) eq 'ARRAY') {
+					foreach my $v (@{$val}) {
+						push(@g_params, $key . '[]=' .
+							uri_escape($v));
+					}
+				} else {
+					push(@g_params,
+						$key . '=' . uri_escape($val));
+				}
 			}
 
 			$uri .= '&' . join('&', @g_params);
