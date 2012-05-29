@@ -29,6 +29,7 @@ Getopt::Long::Configure('bundling');
 my $PROGNAME = basename($0);
 my $REVISION = '1';
 
+our $CAPTURED = '';
 my $JSON;
 our $TESTS;
 my $TOTAL = 0;
@@ -38,6 +39,32 @@ our $UNIQUE = $PROGNAME . $$ . time();
 ##
 ## Subroutines
 ##
+
+sub capture {
+# Purpose: Capture a field from the output
+# Inputs: $got (from Test::Deep)
+# Output: None
+# Return: None
+# Exits: No
+
+	$CAPTURED = shift;
+
+	return 1;
+}
+
+sub captured {
+# Purpose: Compare against the previously captured value
+# Inputs: $got (from Test::Deep)
+# Output: None
+# Return: None
+# Exits: No
+
+	my $got = shift;
+
+	$TOTAL++;
+
+	return is($got, $CAPTURED);
+}
 
 sub init {
 # Purpose: Get command line opts, set things up, etc
@@ -164,6 +191,12 @@ TEST: foreach my $test (@{$TESTS}) {
 		}
 
 		if($request->{'json'}) {
+			while(my ($jkey, $jval) = each(%{$request->{'json'}})) {
+				if($jval eq '_CAPTURED_') {
+					$request->{'json'}->{$jkey} = $CAPTURED;
+				}
+			}
+
 			($json, $err)  = $JSON->to_json($request->{'json'});
 			unless(ok(!defined($err), $test->{'description'} .
 					': request -> JSON')) {
