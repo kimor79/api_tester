@@ -36,6 +36,9 @@ my $TOTAL = 0;
 my $UA;
 our $UNIQUE = $PROGNAME . $$ . time();
 
+our $UNIQUE_NODE = $UNIQUE;
+$UNIQUE_NODE =~ s/[^a-z0-9.-]/-/g;
+
 ##
 ## Subroutines
 ##
