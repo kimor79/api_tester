@@ -31,6 +31,7 @@ my $REVISION = '1';
 
 our $CAPTURED = '';
 my $JSON;
+my %OPTS;
 our $TESTS;
 my $TOTAL = 0;
 my $UA;
@@ -80,6 +81,7 @@ sub init {
 	my $tests_file;
 
 	my $result = GetOptions(
+		'S|ignore-http-status' => \$OPTS{'ignore_http_status'},
 		'c|testsfile=s' => \$tests_file,
 		'h|help|?' => \$help,
 	) || BAIL_OUT(usage());
@@ -135,6 +137,7 @@ sub usage {
 	$usage .= <<USAGE;
 
 Options:
+ -S		Ignore HTTP status code.
  -c file	The test spec file.
  -h		This help statement.
  -v		Increase verbosity. May be used multiple times.
@@ -217,11 +220,16 @@ TEST: foreach my $test (@{$TESTS}) {
 		}
 
 		$response = $UA->request($req);
-		unless(ok(($response->is_success()), $test->{'description'} .
-				': HTTP 2xx')) {
-			diag($response->status_line());
+		if(defined($OPTS{'ignore_http_status'})) {
+			pass($test->{'description'} . ': HTTP 2xx');
 			$cur++;
-			next TEST;
+		} else {
+			unless(ok(($response->is_success()),
+					$test->{'description'} . ': HTTP 2xx')) {
+				diag($response->status_line());
+				$cur++;
+				next TEST;
+			}
 		}
 
 		($got, $err) = $JSON->from_json($response->decoded_content());
